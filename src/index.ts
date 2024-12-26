@@ -1,3 +1,4 @@
+import Zip from "adm-zip"
 import { copyFile, mkdir, readdir, rm, writeFile } from "node:fs/promises"
 import path from "node:path"
 import { functions, jukeboxSongs } from "./datapack"
@@ -69,6 +70,10 @@ for (const textFile of datapackTextFiles) {
 
 await copyFile(DEFAULT_ICON, path.join(DATAPACK_FOLDER, "pack.png"))
 
+const datapackZip = new Zip()
+datapackZip.addLocalFolder(DATAPACK_FOLDER)
+datapackZip.writeZip(DATAPACK_FOLDER + ".zip")
+
 // -----------------------------------------------------------------------------
 
 await rm(RESOURCEPACK_FOLDER, { recursive: true, force: true })
@@ -97,3 +102,7 @@ for (const track of transformSet) {
 }
 
 await copyFile(DEFAULT_ICON, path.join(RESOURCEPACK_FOLDER, "pack.png"))
+
+const resourcepackZip = new Zip()
+resourcepackZip.addLocalFolder(RESOURCEPACK_FOLDER)
+resourcepackZip.writeZip(RESOURCEPACK_FOLDER + ".zip")
