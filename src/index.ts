@@ -1,5 +1,9 @@
 import { copyFile, mkdir, readdir, rm, writeFile } from "node:fs/promises"
 import path from "node:path"
+import { functions, jukeboxSongs } from "./datapack"
+import { getDuration, transformTracks } from "./ffmpeg"
+import { soundsJson } from "./resourcepack"
+import { packMcmeta } from "./shared"
 import {
 	DATAPACK_FOLDER,
 	DEFAULT_ICON,
@@ -9,10 +13,6 @@ import {
 	RESOURCEPACK_FOLDER,
 	type InputTrack,
 } from "./util"
-import { functions, jukeboxSongs } from "./datapack"
-import { packMcmeta } from "./shared"
-import { getDuration, transformTracks } from "./ffmpeg"
-import { soundsJson } from "./resourcepack"
 
 const inputFolderFiles = await readdir(INPUT_FOLDER, { withFileTypes: true })
 const inputFiles = inputFolderFiles
