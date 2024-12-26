@@ -6,3 +6,4 @@ input/*
 !input/readme.md
 
 intermediary/*
+output/*

@@ -1,7 +1,8 @@
-import { readdir } from "node:fs/promises"
+import { mkdir, readdir, rm, writeFile } from "node:fs/promises"
 import path from "node:path"
-import { INPUT_FOLDER, INTERMEDIARY_FOLDER, ROOT_FOLDER } from "./util"
-import { functions, packMcmeta } from "./datapack"
+import { DATAPACK_FOLDER, INPUT_FOLDER, INTERMEDIARY_FOLDER, ROOT_FOLDER } from "./util"
+import { functions } from "./datapack"
+import { packMcmeta } from "./shared"
 
 const inputFolderFiles = await readdir(INPUT_FOLDER, { withFileTypes: true })
 const inputFiles = inputFolderFiles
@@ -24,5 +25,15 @@ for (const file of inputFiles) {
 
 console.log(transformMap)
 
-console.log(packMcmeta())
-console.log(functions(transformMap))
+await rm(DATAPACK_FOLDER, { recursive: true, force: true })
+await mkdir(DATAPACK_FOLDER, { recursive: true })
+const datapackTextFiles = [packMcmeta(), ...functions(transformMap)]
+
+for (const textFile of datapackTextFiles) {
+	const outputPath = path.join(DATAPACK_FOLDER, textFile.path)
+
+	const { dir } = path.parse(outputPath)
+	await mkdir(dir, { recursive: true })
+
+	await writeFile(outputPath, textFile.contents)
+}
