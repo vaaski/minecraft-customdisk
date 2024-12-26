@@ -1,9 +1,19 @@
 {
   "name": "minecraft-customdisk",
-  "module": "src/index.ts",
   "type": "module",
+  "module": "src/index.ts",
+  "scripts": {
+    "format": "prettier -w .",
+    "lint": "eslint ."
+  },
   "devDependencies": {
-    "@types/bun": "latest"
+    "@eslint/js": "^9.17.0",
+    "@types/bun": "latest",
+    "eslint": "^9.17.0",
+    "eslint-plugin-unicorn": "^56.0.1",
+    "globals": "^15.14.0",
+    "prettier": "^3.4.2",
+    "typescript-eslint": "^8.18.2"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
