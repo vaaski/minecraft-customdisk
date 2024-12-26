@@ -2,12 +2,14 @@ import { type InputTrack } from "./util"
 
 export const transformTracks = async (transformSet: Set<InputTrack>) => {
 	for (const item of transformSet) {
-		const process = Bun.spawn(
-			["ffmpeg", "-i", item.inputPath, "-ac", "1", item.intermediaryPath],
-			{
-				stdout: "inherit",
-			},
-		)
+		const process = Bun.spawn([
+			"ffmpeg",
+			"-i",
+			item.inputPath,
+			"-ac",
+			"1",
+			item.intermediaryPath,
+		])
 
 		await process.exited
 	}

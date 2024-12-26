@@ -76,7 +76,7 @@ await rm(INTERMEDIARY_FOLDER, { recursive: true, force: true })
 await mkdir(INTERMEDIARY_FOLDER, { recursive: true })
 
 await transformTracks(transformSet)
-console.log(transformSet)
+console.log("input music", transformSet)
 
 for (const item of inputResourcePackZips) {
 	const zip = new Zip(path.join(item.parentPath, item.name))
@@ -99,12 +99,10 @@ for (const resourcePackFolder of inputResourcePackFolders) {
 			metadata: pack,
 			path: resourcePackFolder,
 		})
-	} else {
-		continue
 	}
 }
 
-console.log(inputResourcePacks)
+console.log("input resource packs", inputResourcePacks)
 
 // -----------------------------------------------------------------------------
 
