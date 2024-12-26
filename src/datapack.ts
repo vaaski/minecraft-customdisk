@@ -14,6 +14,17 @@ export const functions = (transformSet: Set<InputTrack>): OutputFile[] => {
 		})
 	}
 
+	outputFiles.push({
+		path: `data/${PACK_PREFIX}/function/all_discs.mcfunction`,
+		contents: [
+			`# give all discs to player`,
+			"",
+			...[...transformSet].map((item) => {
+				return `give @s minecraft:music_disc_11[minecraft:jukebox_playable={song:"${PACK_PREFIX}:${item.transformedName}"}]`
+			}),
+		].join("\n"),
+	})
+
 	return outputFiles
 }
 
