@@ -199,17 +199,17 @@ for (const track of transformSet) {
 }
 
 if (overlays.entries.length > 0) {
-	const uuid = crypto.randomUUID().replaceAll("-", "").toLowerCase()
+	const overlayPath = "customdisk_overlay"
 	overlays.entries.push({
 		formats: [42, 57],
-		directory: uuid,
+		directory: overlayPath,
 	})
 
-	await mkdir(path.join(RESOURCEPACK_FOLDER, uuid), { recursive: true })
+	await mkdir(path.join(RESOURCEPACK_FOLDER, overlayPath), { recursive: true })
 
 	await rename(
 		path.join(RESOURCEPACK_FOLDER, "assets"),
-		path.join(RESOURCEPACK_FOLDER, uuid, "assets"),
+		path.join(RESOURCEPACK_FOLDER, overlayPath, "assets"),
 	)
 
 	await mkdir(path.join(RESOURCEPACK_FOLDER, "assets"), { recursive: true })
