@@ -16,6 +16,11 @@ export type InputTrack = {
 	intermediaryPath: string
 }
 
+export type InputResourcePack = {
+	metadata: PackMeta
+	path: string
+}
+
 export const stringify = (object: Parameters<typeof JSON.stringify>[0]) => {
 	return JSON.stringify(object, undefined, 2)
 }
@@ -32,3 +37,25 @@ export const DATAPACK_FOLDER = path.join(OUTPUT_FOLDER, `${PACK_PREFIX}-datapack
 export const RESOURCEPACK_FOLDER = path.join(OUTPUT_FOLDER, `${PACK_PREFIX}-resourcepack`)
 
 export const DEFAULT_ICON = path.join(ROOT_FOLDER, "assets/disk.png")
+
+export type PackMeta = {
+	pack: Pack
+	overlays?: Overlays
+}
+
+export type Pack = {
+	pack_format: number
+	supported_formats?: Format
+	description: string
+}
+
+export type Format = number[] | number | { min_inclusive: number; max_inclusive: number }
+
+export type Overlays = {
+	entries: Entry[]
+}
+
+export type Entry = {
+	formats: Format
+	directory: string
+}
