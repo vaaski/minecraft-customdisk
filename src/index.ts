@@ -13,6 +13,7 @@ import {
 import path from "node:path"
 import { functions, jukeboxSongs } from "./datapack"
 import { getDuration, transformTracks } from "./ffmpeg"
+import { getRandomDiskImage, hueRotateCopy } from "./image"
 import { diskModelIndex, diskModels, soundsJson } from "./resourcepack"
 import { packMcmeta } from "./shared"
 import {
@@ -23,6 +24,7 @@ import {
 	INTERMEDIARY_FOLDER,
 	PACK_PREFIX,
 	RESOURCEPACK_FOLDER,
+	sha1ToSeed,
 	type InputResourcePack,
 	type InputTrack,
 	type Overlays,
@@ -202,17 +204,22 @@ for (const track of transformSet) {
 
 	await copyFile(track.intermediaryPath, outputPath)
 
+	const inputTrackHash = await fileSHA1(track.inputPath)
+	const shaSeed = sha1ToSeed(inputTrackHash)
+	const hueAmount = shaSeed * 200 - 100
+
 	await mkdir(
 		path.join(RESOURCEPACK_FOLDER, "assets/minecraft/textures/item/music_disc_11"),
 		{ recursive: true },
 	)
-	await copyFile(
-		DEFAULT_ICON,
+	await hueRotateCopy(
+		getRandomDiskImage(shaSeed),
 		path.join(
 			RESOURCEPACK_FOLDER,
 			"assets/minecraft/textures/item/music_disc_11",
 			track.transformedName + ".png",
 		),
+		hueAmount,
 	)
 }
 

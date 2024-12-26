@@ -36,6 +36,7 @@ export const DATAPACK_FOLDER = path.join(OUTPUT_FOLDER, `${PACK_PREFIX}-datapack
 export const RESOURCEPACK_FOLDER = path.join(OUTPUT_FOLDER, `${PACK_PREFIX}-resourcepack`)
 
 export const DEFAULT_ICON = path.join(ROOT_FOLDER, "assets/disk.png")
+export const COLOR_DISK_FOLDER = path.join(ROOT_FOLDER, "assets/disks")
 
 export const stringify = (object: Parameters<typeof JSON.stringify>[0]) => {
 	return JSON.stringify(object, undefined, 2)
@@ -48,6 +49,19 @@ export const fileSHA1 = async (path: string) => {
 	return [...new Uint8Array(hash)]
 		.map((byte) => byte.toString(16).padStart(2, "0"))
 		.join("")
+}
+
+export const sha1ToSeed = (sha1: string) => {
+	const buffer = Buffer.from(sha1, "hex")
+	const hashBytes = [...buffer]
+
+	let largeNumber = 0
+	for (const byte of hashBytes) {
+		largeNumber = largeNumber * 256 + byte // equivalent to left shifting by 8 bits and adding the byte
+	}
+
+	// Normalize the large number to a value between 0 and 1.
+	return largeNumber / (256 ** 20 - 1) //256^20 is the maximum possible value (all bytes are 255)
 }
 
 // -----------------------------------------------------------------------------

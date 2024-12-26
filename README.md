@@ -8,3 +8,6 @@ create custom music discs for minecraft
 - takes any format as input in the input folder
 - takes name from the input file name
 - merges with any resource packs in the input folder
+- takes the existing minecraft disks and adds a seeded random hue
+  - all custom disks will have a random image,
+    but given the same input file the output will be identical
