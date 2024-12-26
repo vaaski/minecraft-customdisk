@@ -6,7 +6,7 @@ export const packMcmeta = (): OutputFile => {
 		contents: stringify({
 			pack: {
 				pack_format: 57,
-				supported_formats: [57, 57],
+				supported_formats: [42, 57],
 				description: "Custom Jukebox Pack",
 			},
 		}),

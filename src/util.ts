@@ -11,6 +11,7 @@ export type InputTrack = {
 	inputDurationSeconds: number
 
 	transformedName: string
+	diskName: string
 
 	intermediaryPath: string
 }

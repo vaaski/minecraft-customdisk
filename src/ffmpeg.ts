@@ -1,7 +1,8 @@
-import { mkdir } from "node:fs/promises"
+import { mkdir, rm } from "node:fs/promises"
 import { INTERMEDIARY_FOLDER, type InputTrack } from "./util"
 
 export const transformTracks = async (transformSet: Set<InputTrack>) => {
+	await rm(INTERMEDIARY_FOLDER, { recursive: true, force: true })
 	await mkdir(INTERMEDIARY_FOLDER, { recursive: true })
 
 	for (const item of transformSet) {
@@ -11,7 +12,8 @@ export const transformTracks = async (transformSet: Set<InputTrack>) => {
 				stdout: "inherit",
 			},
 		)
-		console.log(await process.exited)
+
+		await process.exited
 	}
 }
 

@@ -5,11 +5,14 @@ import {
 	DEFAULT_ICON,
 	INPUT_FOLDER,
 	INTERMEDIARY_FOLDER,
+	PACK_PREFIX,
+	RESOURCEPACK_FOLDER,
 	type InputTrack,
 } from "./util"
 import { functions, jukeboxSongs } from "./datapack"
 import { packMcmeta } from "./shared"
-import { getDuration } from "./ffmpeg"
+import { getDuration, transformTracks } from "./ffmpeg"
+import { soundsJson } from "./resourcepack"
 
 const inputFolderFiles = await readdir(INPUT_FOLDER, { withFileTypes: true })
 const inputFiles = inputFolderFiles
@@ -23,7 +26,7 @@ for (const file of inputFiles) {
 
 	const inputName = path.parse(file.name).name
 
-	const outputName = inputName.replaceAll(/[^a-zA-Z0-9]/g, "-")
+	const outputName = inputName.replaceAll(/[^a-zA-Z0-9]/g, "_").toLowerCase()
 	const outputFile = outputName + ".ogg"
 	const outputPath = path.join(INTERMEDIARY_FOLDER, outputFile)
 
@@ -35,12 +38,17 @@ for (const file of inputFiles) {
 		inputDurationSeconds: duration,
 
 		transformedName: outputName,
+		diskName: `${PACK_PREFIX}_${outputName}`,
 
 		intermediaryPath: outputPath,
 	})
 }
 
+await transformTracks(transformSet)
+
 console.log(transformSet)
+
+// -----------------------------------------------------------------------------
 
 await rm(DATAPACK_FOLDER, { recursive: true, force: true })
 await mkdir(DATAPACK_FOLDER, { recursive: true })
@@ -60,3 +68,32 @@ for (const textFile of datapackTextFiles) {
 }
 
 await copyFile(DEFAULT_ICON, path.join(DATAPACK_FOLDER, "pack.png"))
+
+// -----------------------------------------------------------------------------
+
+await rm(RESOURCEPACK_FOLDER, { recursive: true, force: true })
+await mkdir(RESOURCEPACK_FOLDER, { recursive: true })
+
+const resourcepackTextFiles = [packMcmeta(), soundsJson(transformSet)]
+
+for (const textFile of resourcepackTextFiles) {
+	const outputPath = path.join(RESOURCEPACK_FOLDER, textFile.path)
+
+	const { dir } = path.parse(outputPath)
+	await mkdir(dir, { recursive: true })
+
+	await writeFile(outputPath, textFile.contents)
+}
+
+for (const track of transformSet) {
+	const outputPath =
+		path.join(RESOURCEPACK_FOLDER, "assets/minecraft/sounds/records", track.diskName) +
+		".ogg"
+
+	const { dir } = path.parse(outputPath)
+	await mkdir(dir, { recursive: true })
+
+	await copyFile(track.intermediaryPath, outputPath)
+}
+
+await copyFile(DEFAULT_ICON, path.join(RESOURCEPACK_FOLDER, "pack.png"))
