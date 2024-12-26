@@ -1,3 +1,4 @@
+import { readFile } from "node:fs/promises"
 import path from "node:path"
 
 export type OutputFile = {
@@ -21,9 +22,7 @@ export type InputResourcePack = {
 	path: string
 }
 
-export const stringify = (object: Parameters<typeof JSON.stringify>[0]) => {
-	return JSON.stringify(object, undefined, 2)
-}
+// -----------------------------------------------------------------------------
 
 export const PACK_PREFIX = "customdisk"
 
@@ -37,6 +36,21 @@ export const DATAPACK_FOLDER = path.join(OUTPUT_FOLDER, `${PACK_PREFIX}-datapack
 export const RESOURCEPACK_FOLDER = path.join(OUTPUT_FOLDER, `${PACK_PREFIX}-resourcepack`)
 
 export const DEFAULT_ICON = path.join(ROOT_FOLDER, "assets/disk.png")
+
+export const stringify = (object: Parameters<typeof JSON.stringify>[0]) => {
+	return JSON.stringify(object, undefined, 2)
+}
+
+export const fileSHA1 = async (path: string) => {
+	const file = await readFile(path)
+	const hash = await crypto.subtle.digest("SHA-1", file)
+
+	return [...new Uint8Array(hash)]
+		.map((byte) => byte.toString(16).padStart(2, "0"))
+		.join("")
+}
+
+// -----------------------------------------------------------------------------
 
 export type PackMeta = {
 	pack: Pack

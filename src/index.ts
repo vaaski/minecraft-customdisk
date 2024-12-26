@@ -18,6 +18,7 @@ import { packMcmeta } from "./shared"
 import {
 	DATAPACK_FOLDER,
 	DEFAULT_ICON,
+	fileSHA1,
 	INPUT_FOLDER,
 	INTERMEDIARY_FOLDER,
 	PACK_PREFIX,
@@ -225,3 +226,6 @@ await copyFile(DEFAULT_ICON, path.join(RESOURCEPACK_FOLDER, "pack.png"))
 const resourcepackZip = new Zip()
 resourcepackZip.addLocalFolder(RESOURCEPACK_FOLDER)
 resourcepackZip.writeZip(RESOURCEPACK_FOLDER + ".zip")
+
+console.log()
+console.log("resourcepack sha1:", await fileSHA1(RESOURCEPACK_FOLDER + ".zip"))
