@@ -1,9 +1,7 @@
-import { mkdir, readdir } from "node:fs/promises"
+import { readdir } from "node:fs/promises"
 import path from "node:path"
-
-const INPUT_FOLDER = "input"
-const INTERMEDIARY_FOLDER = "intermediary"
-const ROOT_FOLDER = path.join(import.meta.dir, "..")
+import { INPUT_FOLDER, INTERMEDIARY_FOLDER, ROOT_FOLDER } from "./util"
+import { functions, packMcmeta } from "./datapack"
 
 const inputFolderFiles = await readdir(INPUT_FOLDER, { withFileTypes: true })
 const inputFiles = inputFolderFiles
@@ -24,13 +22,7 @@ for (const file of inputFiles) {
 	transformMap.set(inputPath, outputPath)
 }
 
-await mkdir(INTERMEDIARY_FOLDER, { recursive: true })
-
-for (const [input, output] of transformMap) {
-	const process = Bun.spawn(["ffmpeg", "-i", input, "-ac", "1", output], {
-		stdout: "inherit",
-	})
-	console.log(await process.exited)
-}
-
 console.log(transformMap)
+
+console.log(packMcmeta())
+console.log(functions(transformMap))
