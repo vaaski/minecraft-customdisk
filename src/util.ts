@@ -8,6 +8,7 @@ export type OutputFile = {
 export type InputTrack = {
 	inputName: string
 	inputPath: string
+	inputDurationSeconds: number
 
 	transformedName: string
 

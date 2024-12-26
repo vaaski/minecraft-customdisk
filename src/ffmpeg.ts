@@ -14,3 +14,20 @@ export const transformTracks = async (transformSet: Set<InputTrack>) => {
 		console.log(await process.exited)
 	}
 }
+
+export const getDuration = async (path: string) => {
+	const process = Bun.spawn([
+		"ffprobe",
+		"-v",
+		"error",
+		"-show_entries",
+		"format=duration",
+		"-of",
+		"default=noprint_wrappers=1:nokey=1",
+		path,
+	])
+
+	const text = await new Response(process.stdout).text()
+
+	return Number.parseFloat(text)
+}

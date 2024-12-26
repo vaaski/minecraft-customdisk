@@ -1,4 +1,4 @@
-import { PACK_PREFIX, type InputTrack, type OutputFile } from "./util"
+import { PACK_PREFIX, stringify, type InputTrack, type OutputFile } from "./util"
 
 export const functions = (transformSet: Set<InputTrack>): OutputFile[] => {
 	const outputFiles: OutputFile[] = []
@@ -11,6 +11,26 @@ export const functions = (transformSet: Set<InputTrack>): OutputFile[] => {
 				"",
 				`give @s minecraft:music_disc_11[minecraft:jukebox_playable={song:"${PACK_PREFIX}:${item.transformedName}"}]`,
 			].join("\n"),
+		})
+	}
+
+	return outputFiles
+}
+
+export const jukeboxSongs = (transformSet: Set<InputTrack>): OutputFile[] => {
+	const outputFiles: OutputFile[] = []
+
+	for (const item of transformSet) {
+		outputFiles.push({
+			path: `data/${PACK_PREFIX}/jukebox_song/${item.transformedName}.json`,
+			contents: stringify({
+				comparator_output: 1,
+				description: item.inputName,
+				length_in_seconds: item.inputDurationSeconds,
+				sound_event: {
+					sound_id: `minecraft:music_disc.${item.transformedName}`,
+				},
+			}),
 		})
 	}
 
