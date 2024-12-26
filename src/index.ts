@@ -1,7 +1,8 @@
-import { mkdir, readdir, rm, writeFile } from "node:fs/promises"
+import { copyFile, mkdir, readdir, rm, writeFile } from "node:fs/promises"
 import path from "node:path"
 import {
 	DATAPACK_FOLDER,
+	DEFAULT_ICON,
 	INPUT_FOLDER,
 	INTERMEDIARY_FOLDER,
 	type InputTrack,
@@ -57,3 +58,5 @@ for (const textFile of datapackTextFiles) {
 
 	await writeFile(outputPath, textFile.contents)
 }
+
+await copyFile(DEFAULT_ICON, path.join(DATAPACK_FOLDER, "pack.png"))

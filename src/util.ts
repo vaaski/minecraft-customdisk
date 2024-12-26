@@ -29,3 +29,5 @@ export const OUTPUT_FOLDER = path.join(ROOT_FOLDER, "output")
 
 export const DATAPACK_FOLDER = path.join(OUTPUT_FOLDER, `${PACK_PREFIX}-datapack`)
 export const RESOURCEPACK_FOLDER = path.join(OUTPUT_FOLDER, `${PACK_PREFIX}-resourcepack`)
+
+export const DEFAULT_ICON = path.join(ROOT_FOLDER, "assets/disk.png")
