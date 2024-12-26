@@ -1,19 +1,15 @@
-import { PACK_PREFIX, type OutputFile } from "./util"
-import path from "node:path"
+import { PACK_PREFIX, type InputTrack, type OutputFile } from "./util"
 
-export const functions = (transformMap: Map<string, string>): OutputFile[] => {
+export const functions = (transformSet: Set<InputTrack>): OutputFile[] => {
 	const outputFiles: OutputFile[] = []
 
-	for (const [input, output] of transformMap) {
-		const { name: inputName } = path.parse(input)
-		const { name: outputName } = path.parse(output)
-
+	for (const item of transformSet) {
 		outputFiles.push({
-			path: `data/${PACK_PREFIX}/function/${outputName}.mcfunction`,
+			path: `data/${PACK_PREFIX}/function/${item.transformedName}.mcfunction`,
 			contents: [
-				`# give disc "${inputName}" to player`,
+				`# give disc "${item.inputName}" to player`,
 				"",
-				`give @s minecraft:music_disc_11[minecraft:jukebox_playable={song:"${PACK_PREFIX}:${outputName}"}]`,
+				`give @s minecraft:music_disc_11[minecraft:jukebox_playable={song:"${PACK_PREFIX}:${item.transformedName}"}]`,
 			].join("\n"),
 		})
 	}

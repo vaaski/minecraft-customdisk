@@ -1,6 +1,12 @@
 import { mkdir, readdir, rm, writeFile } from "node:fs/promises"
 import path from "node:path"
-import { DATAPACK_FOLDER, INPUT_FOLDER, INTERMEDIARY_FOLDER, ROOT_FOLDER } from "./util"
+import {
+	DATAPACK_FOLDER,
+	INPUT_FOLDER,
+	INTERMEDIARY_FOLDER,
+	ROOT_FOLDER,
+	type InputTrack,
+} from "./util"
 import { functions } from "./datapack"
 import { packMcmeta } from "./shared"
 
@@ -9,7 +15,7 @@ const inputFiles = inputFolderFiles
 	.filter((file) => file.isFile())
 	.filter((file) => file.name !== "readme.md")
 
-const transformMap = new Map<string, string>()
+const transformSet = new Set<InputTrack>()
 
 for (const file of inputFiles) {
 	const inputPath = path.join(ROOT_FOLDER, INPUT_FOLDER, file.name)
@@ -20,14 +26,19 @@ for (const file of inputFiles) {
 	const outputFile = outputName + ".ogg"
 	const outputPath = path.join(ROOT_FOLDER, INTERMEDIARY_FOLDER, outputFile)
 
-	transformMap.set(inputPath, outputPath)
+	transformSet.add({
+		inputPath: inputPath,
+		inputName: inputName,
+		transformedName: outputName,
+		intermediaryPath: outputPath,
+	})
 }
 
-console.log(transformMap)
+console.log(transformSet)
 
 await rm(DATAPACK_FOLDER, { recursive: true, force: true })
 await mkdir(DATAPACK_FOLDER, { recursive: true })
-const datapackTextFiles = [packMcmeta(), ...functions(transformMap)]
+const datapackTextFiles = [packMcmeta(), ...functions(transformSet)]
 
 for (const textFile of datapackTextFiles) {
 	const outputPath = path.join(DATAPACK_FOLDER, textFile.path)

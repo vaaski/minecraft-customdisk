@@ -5,6 +5,15 @@ export type OutputFile = {
 	contents: string
 }
 
+export type InputTrack = {
+	inputName: string
+	inputPath: string
+
+	transformedName: string
+
+	intermediaryPath: string
+}
+
 export const stringify = (object: Parameters<typeof JSON.stringify>[0]) => {
 	return JSON.stringify(object, undefined, 2)
 }
