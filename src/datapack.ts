@@ -3,13 +3,12 @@ import { PACK_PREFIX, stringify, type InputTrack, type OutputFile } from "./util
 export const functions = (transformSet: Set<InputTrack>): OutputFile[] => {
 	const outputFiles: OutputFile[] = []
 
-	for (const item of transformSet) {
+	for (const [index, item] of [...transformSet].entries()) {
 		outputFiles.push({
 			path: `data/${PACK_PREFIX}/function/${item.transformedName}.mcfunction`,
 			contents: [
 				`# give disc "${item.inputName}" to player`,
-				"",
-				`give @s minecraft:music_disc_11[minecraft:jukebox_playable={song:"${PACK_PREFIX}:${item.transformedName}"}]`,
+				`give @s minecraft:music_disc_11[minecraft:jukebox_playable={song:"${PACK_PREFIX}:${item.transformedName}"},minecraft:custom_model_data=${index + 1}]`,
 			].join("\n"),
 		})
 	}
@@ -18,9 +17,8 @@ export const functions = (transformSet: Set<InputTrack>): OutputFile[] => {
 		path: `data/${PACK_PREFIX}/function/all_discs.mcfunction`,
 		contents: [
 			`# give all discs to player`,
-			"",
-			...[...transformSet].map((item) => {
-				return `give @s minecraft:music_disc_11[minecraft:jukebox_playable={song:"${PACK_PREFIX}:${item.transformedName}"}]`
+			...[...transformSet].map((item, index) => {
+				return `give @s minecraft:music_disc_11[minecraft:jukebox_playable={song:"${PACK_PREFIX}:${item.transformedName}"},minecraft:custom_model_data=${index + 1}]`
 			}),
 		].join("\n"),
 	})

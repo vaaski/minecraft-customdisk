@@ -13,7 +13,7 @@ import {
 import path from "node:path"
 import { functions, jukeboxSongs } from "./datapack"
 import { getDuration, transformTracks } from "./ffmpeg"
-import { soundsJson } from "./resourcepack"
+import { diskModelIndex, diskModels, soundsJson } from "./resourcepack"
 import { packMcmeta } from "./shared"
 import {
 	DATAPACK_FOLDER,
@@ -176,7 +176,12 @@ for (const pack of inputResourcePacks) {
 	}
 }
 
-const resourcepackTextFiles = [packMcmeta(overlays), soundsJson(transformSet)]
+const resourcepackTextFiles = [
+	packMcmeta(overlays),
+	soundsJson(transformSet),
+	diskModelIndex(transformSet),
+	...diskModels(transformSet),
+]
 
 for (const textFile of resourcepackTextFiles) {
 	const outputPath = path.join(RESOURCEPACK_FOLDER, textFile.path)
@@ -196,6 +201,19 @@ for (const track of transformSet) {
 	await mkdir(dir, { recursive: true })
 
 	await copyFile(track.intermediaryPath, outputPath)
+
+	await mkdir(
+		path.join(RESOURCEPACK_FOLDER, "assets/minecraft/textures/item/music_disc_11"),
+		{ recursive: true },
+	)
+	await copyFile(
+		DEFAULT_ICON,
+		path.join(
+			RESOURCEPACK_FOLDER,
+			"assets/minecraft/textures/item/music_disc_11",
+			track.transformedName + ".png",
+		),
+	)
 }
 
 if (overlays.entries.length > 0) {
